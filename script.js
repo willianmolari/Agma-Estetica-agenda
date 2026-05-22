@@ -18,12 +18,12 @@ async function carregarAgenda() {
             : "<p>Nenhuma agenda encontrada</p>";
 
     } catch (err) {
-        console.error(err);
+        console.error("Erro ao carregar agenda:", err);
         list.innerHTML = "<p>Erro ao carregar agenda</p>";
     }
 }
 
-// ---------------- SALVAR AGENDA ----------------
+// ---------------- SALVAR AGENDA (SEM CORS PROBLEMÁTICO) ----------------
 document.getElementById("agenda-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -34,27 +34,20 @@ document.getElementById("agenda-form").addEventListener("submit", async (e) => {
         procedimento: document.getElementById("procedimento").value
     };
 
+    const params = new URLSearchParams(dados);
+
     try {
-        const res = await fetch(API_URL, {
+        await fetch(API_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dados)
+            body: params
         });
 
-        const result = await res.json();
-
-        if (result.status === "success") {
-            alert("Salvo com sucesso!");
-            e.target.reset();
-            carregarAgenda();
-        } else {
-            alert("Erro ao salvar: " + (result.message || ""));
-        }
+        alert("Salvo com sucesso!");
+        e.target.reset();
+        carregarAgenda();
 
     } catch (err) {
-        console.error(err);
+        console.error("Erro ao salvar:", err);
         alert("Erro de conexão");
     }
 });

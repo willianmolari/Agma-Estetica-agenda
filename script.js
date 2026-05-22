@@ -32,10 +32,10 @@ form.method = "POST";
 
 // depois de enviar, limpa e recarrega
 form.addEventListener("submit", () => {
-    setTimeout(() => {
+    setTimeout(async () => {
         form.reset();
-        carregarAgenda();
-    }, 800);
+        await carregarAgenda();
+    }, 1200);
 });
 
 // ---------------- INICIALIZA ----------------

@@ -1,4 +1,4 @@
-const API_URL = "SUA_URL_DO_APPS_SCRIPT_AQUI"; // Cole a URL que você copiou do Google
+const API_URL = "https://script.google.com/macros/s/AKfycbwd69RxRJBWoLLIUE65Ck-CYQwB4noi6qetFgeNkiYWzcZhEszhWE3LyD6LmyfBfYOn/exec"; // Cole a URL que você copiou do Google
 
 // Função para buscar e listar agendamentos
 async function carregarAgenda() {

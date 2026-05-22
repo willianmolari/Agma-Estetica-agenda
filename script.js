@@ -13,10 +13,10 @@ async function carregarAgenda() {
     data.forEach(item => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${item.Data}</td>
-        <td>${item.Horario}</td>
-        <td>${item.Cliente}</td>
-        <td>${item.Procedimento}</td>
+        <td>${item.data}</td>
+        <td>${item.horario}</td>
+        <td>${item.cliente}</td>
+        <td>${item.procedimento}</td>
       `;
       agendaList.appendChild(row);
     });
@@ -31,10 +31,10 @@ document.getElementById("agenda-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const novoAgendamento = {
-    data: document.getElementById("Data").value,
-    horario: document.getElementById("Horario").value,
-    cliente: document.getElementById("Cliente").value,
-    procedimento: document.getElementById("Procedimento").value
+    data: document.getElementById("data").value,
+    horario: document.getElementById("horario").value,
+    cliente: document.getElementById("cliente").value,
+    procedimento: document.getElementById("procedimento").value
   };
 
   try {

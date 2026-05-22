@@ -9,10 +9,10 @@ async function carregarAgenda() {
         const data = await res.json();
 
         list.innerHTML = data.length
-            ? data.map(i => `
+            ? data.map(item => `
                 <div class="card">
-                    <p><strong>${i.data} às ${i.horario}</strong></p>
-                    <p>${i.cliente} - ${i.procedimento}</p>
+                    <p><strong>${item.data} às ${item.horario}</strong></p>
+                    <p>${item.cliente} - ${item.procedimento}</p>
                 </div>
             `).join('')
             : "<p>Nenhuma agenda encontrada</p>";
@@ -23,33 +23,19 @@ async function carregarAgenda() {
     }
 }
 
-// ---------------- SALVAR AGENDA (SEM CORS PROBLEMÁTICO) ----------------
-document.getElementById("agenda-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
+// ---------------- SALVAR AGENDA (SEM FETCH POST) ----------------
+// 🔥 ISSO AQUI É O QUE RESOLVE O CORS DEFINITIVAMENTE
+const form = document.getElementById("agenda-form");
 
-    const dados = {
-        data: document.getElementById("data").value,
-        horario: document.getElementById("horario").value,
-        cliente: document.getElementById("cliente").value,
-        procedimento: document.getElementById("procedimento").value
-    };
+form.action = API_URL;
+form.method = "POST";
 
-    const params = new URLSearchParams(dados);
-
-    try {
-        await fetch(API_URL, {
-            method: "POST",
-            body: params
-        });
-
-        alert("Salvo com sucesso!");
-        e.target.reset();
+// depois de enviar, limpa e recarrega
+form.addEventListener("submit", () => {
+    setTimeout(() => {
+        form.reset();
         carregarAgenda();
-
-    } catch (err) {
-        console.error("Erro ao salvar:", err);
-        alert("Erro de conexão");
-    }
+    }, 800);
 });
 
 // ---------------- INICIALIZA ----------------

@@ -7,38 +7,53 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwd69RxRJBWoLLIUE65Ck-C
 // ======================
 async function carregarAgenda() {
 
-  const res = await fetch(API_URL);
-  const data = await res.json();
+  try {
 
-  const container = document.getElementById("agenda-list");
-  container.innerHTML = "";
+    const res = await fetch(API_URL);
 
-  if (!Array.isArray(data)) return;
+    if (!res.ok) throw new Error("Erro na API");
 
-  data.forEach(item => {
+    const data = await res.json();
 
-    const div = document.createElement("div");
-    div.className = "agenda-item";
+    const container = document.getElementById("agenda-list");
 
-    div.innerHTML = `
-      <strong>${item.cliente}</strong>
-      <div class="agenda-meta">
-        📅 ${item.data} • ⏰ ${item.horario}
-      </div>
-      <div class="agenda-meta">
-        💆 ${item.procedimento}
-      </div>
-    `;
+    container.innerHTML = "";
 
-    container.appendChild(div);
+    if (!Array.isArray(data)) return;
 
-  });
+    data.forEach(item => {
+
+      const div = document.createElement("div");
+      div.className = "agenda-item";
+
+      div.innerHTML = `
+        <strong>${item.cliente || ""}</strong>
+        <div class="agenda-meta">
+          📅 ${item.data || ""} • ⏰ ${item.horario || ""}
+        </div>
+        <div class="agenda-meta">
+          💆 ${item.procedimento || ""}
+        </div>
+      `;
+
+      container.appendChild(div);
+
+    });
+
+  } catch (err) {
+
+    console.error("Erro GET:", err);
+
+    document.getElementById("agenda-list").innerHTML =
+      "<p>Erro ao carregar agenda.</p>";
+
+  }
 
 }
 
 
 // ======================
-// SALVAR
+// SALVAR AGENDAMENTO
 // ======================
 document.getElementById("agenda-form").addEventListener("submit", async (e) => {
 
@@ -58,7 +73,17 @@ document.getElementById("agenda-form").addEventListener("submit", async (e) => {
       body: formData
     });
 
-    const result = await res.json();
+    if (!res.ok) throw new Error("Erro POST");
+
+    const text = await res.text();
+
+    let result;
+
+    try {
+      result = JSON.parse(text);
+    } catch {
+      throw new Error("Resposta inválida da API");
+    }
 
     if (result.status === "success") {
 
@@ -68,11 +93,18 @@ document.getElementById("agenda-form").addEventListener("submit", async (e) => {
 
       carregarAgenda();
 
+    } else {
+
+      alert("Erro ao salvar");
+
     }
 
   } catch (err) {
-    alert("Erro ao salvar");
-    console.error(err);
+
+    console.error("Erro POST:", err);
+
+    alert("Erro ao salvar agendamento");
+
   }
 
 });

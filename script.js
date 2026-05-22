@@ -1,41 +1,25 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwd69RxRJBWoLLIUE65Ck-CYQwB4noi6qetFgeNkiYWzcZhEszhWE3LyD6LmyfBfYOn/exec"; // Cole a URL que você copiou do Google
+// SUBSTITUA PELA SUA URL (Mantenha o /exec no final)
+const API_URL = "https://script.google.com/macros/s/AKfycbwd69RxRJBWoLLIUE65Ck-CYQwB4noi6qetFgeNkiYWzcZhEszhWE3LyD6LmyfBfYOn/exec";
 
-// Função para buscar e listar agendamentos
-async function carregarAgenda() {
+function carregarAgenda() {
     const container = document.getElementById('container-agenda');
-    try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
+    
+    // Nome da função de callback
+    const callbackName = 'callbackData';
+    
+    window[callbackName] = function(data) {
         container.innerHTML = data.map(item => `
             <div class="card">
                 <p><strong>${item.data} - ${item.horario}</strong></p>
-                <p>${item.cliente} | ${item.procedimento}</p>
+                <p>Cliente: ${item.cliente}</p>
+                <p>Procedimento: ${item.procedimento}</p>
             </div>
         `).join('');
-    } catch (e) {
-        container.innerHTML = "Erro ao carregar dados.";
-    }
-}
-
-// Função para salvar novo agendamento
-async function salvar() {
-    const dados = {
-        data: document.getElementById('data').value,
-        horario: document.getElementById('horario').value,
-        cliente: document.getElementById('cliente').value,
-        procedimento: document.getElementById('procedimento').value
     };
 
-    if(!dados.cliente || !dados.data) return alert("Preencha todos os campos!");
-
-    fetch(API_URL, {
-        method: 'POST',
-        mode: 'no-cors', // Necessário para evitar erro de CORS
-        body: JSON.stringify(dados)
-    }).then(() => {
-        alert("Agendado com sucesso!");
-        location.reload();
-    });
+    const script = document.createElement('script');
+    script.src = `${API_URL}?callback=${callbackName}`;
+    document.body.appendChild(script);
 }
 
 carregarAgenda();

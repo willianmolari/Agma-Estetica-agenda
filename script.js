@@ -1,126 +1,82 @@
-// URL da sua API publicada no Google Apps Script
+
 const API_URL = "https://script.google.com/macros/s/AKfycbwd69RxRJBWoLLIUE65Ck-CYQwB4noi6qetFgeNkiYWzcZhEszhWE3LyD6LmyfBfYOn/exec";
 
 
-// =========================
+// ======================
 // CARREGAR AGENDA
-// =========================
+// ======================
 async function carregarAgenda() {
 
-  try {
+  const res = await fetch(API_URL);
+  const data = await res.json();
 
-    const response = await fetch(API_URL);
+  const container = document.getElementById("agenda-list");
+  container.innerHTML = "";
 
-    if (!response.ok) {
-      throw new Error("Erro HTTP: " + response.status);
-    }
+  if (!Array.isArray(data)) return;
 
-    const data = await response.json();
+  data.forEach(item => {
 
-    const agendaList = document.getElementById("agenda-list");
+    const div = document.createElement("div");
+    div.className = "agenda-item";
 
-    agendaList.innerHTML = "";
+    div.innerHTML = `
+      <strong>${item.cliente}</strong>
+      <div class="agenda-meta">
+        📅 ${item.data} • ⏰ ${item.horario}
+      </div>
+      <div class="agenda-meta">
+        💆 ${item.procedimento}
+      </div>
+    `;
 
-    // Verifica se veio array
-    if (!Array.isArray(data)) {
-      throw new Error("API retornou formato inválido");
-    }
+    container.appendChild(div);
 
-    data.forEach(item => {
-
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${item.data || ""}</td>
-        <td>${item.horario || ""}</td>
-        <td>${item.cliente || ""}</td>
-        <td>${item.procedimento || ""}</td>
-      `;
-
-      agendaList.appendChild(row);
-
-    });
-
-  } catch (error) {
-
-    console.error("Erro ao carregar agenda:", error);
-
-    alert("Erro ao carregar agenda.");
-
-  }
+  });
 
 }
 
 
-// =========================
-// ENVIAR AGENDAMENTO
-// =========================
-document
-  .getElementById("agenda-form")
-  .addEventListener("submit", async (e) => {
+// ======================
+// SALVAR
+// ======================
+document.getElementById("agenda-form").addEventListener("submit", async (e) => {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    const novoAgendamento = {
+  const formData = new URLSearchParams();
 
-      data: document.getElementById("data").value,
+  formData.append("data", document.getElementById("data").value);
+  formData.append("horario", document.getElementById("horario").value);
+  formData.append("cliente", document.getElementById("cliente").value);
+  formData.append("procedimento", document.getElementById("procedimento").value);
 
-      horario: document.getElementById("horario").value,
+  try {
 
-      cliente: document.getElementById("cliente").value,
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: formData
+    });
 
-      procedimento: document.getElementById("procedimento").value
+    const result = await res.json();
 
-    };
+    if (result.status === "success") {
 
-    try {
+      alert("Agendado com sucesso!");
 
-      const response = await fetch(API_URL, {
+      document.getElementById("agenda-form").reset();
 
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify(novoAgendamento)
-
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro HTTP: " + response.status);
-      }
-
-      const result = await response.json();
-
-      if (result.status === "sucesso") {
-
-        alert("Agendamento realizado!");
-
-        document
-          .getElementById("agenda-form")
-          .reset();
-
-        carregarAgenda();
-
-      } else {
-
-        alert("Erro ao salvar.");
-
-      }
-
-    } catch (error) {
-
-      console.error("Erro ao enviar:", error);
-
-      alert("Erro ao enviar agendamento.");
+      carregarAgenda();
 
     }
 
-  });
+  } catch (err) {
+    alert("Erro ao salvar");
+    console.error(err);
+  }
+
+});
 
 
-// =========================
-// INICIAR
-// =========================
+// init
 carregarAgenda();

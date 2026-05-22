@@ -18,16 +18,19 @@
 
   <h2>Novo Agendamento</h2>
 
-  <form id="agenda-form">
+  <form id="agenda-form" action="https://script.google.com/macros/s/AKfycbwd69RxRJBWoLLIUE65Ck-CYQwB4noi6qetFgeNkiYWzcZhEszhWE3LyD6LmyfBfYOn/exec" method="POST">
 
-    <input type="date" id="data" required>
-    <input type="time" id="horario" required>
-    <input type="text" id="cliente" placeholder="Cliente" required>
-    <input type="text" id="procedimento" placeholder="Procedimento" required>
+  <input type="date" id="data" name="data" required>
 
-    <button type="submit">Salvar</button>
+  <input type="time" id="horario" name="horario" required>
 
-  </form>
+  <input type="text" id="cliente" name="cliente" placeholder="Cliente" required>
+
+  <input type="text" id="procedimento" name="procedimento" placeholder="Procedimento" required>
+
+  <button type="submit">Salvar</button>
+
+</form>
 
 </section>
 

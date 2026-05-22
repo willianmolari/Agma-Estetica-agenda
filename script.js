@@ -1,59 +1,55 @@
 
+// URL do Apps Script
 const API_URL = "https://script.google.com/macros/s/AKfycbwd69RxRJBWoLLIUE65Ck-CYQwB4noi6qetFgeNkiYWzcZhEszhWE3LyD6LmyfBfYOn/exec";
 
 
 // ======================
-// CARREGAR AGENDA
+// CARREGAR AGENDA (JSONP - sem CORS)
 // ======================
-async function carregarAgenda() {
+function carregarAgenda() {
 
-  try {
+  const script = document.createElement("script");
 
-    const res = await fetch(API_URL);
+  script.src = API_URL + "?callback=handleData";
 
-    if (!res.ok) throw new Error("Erro na API");
+  document.body.appendChild(script);
 
-    const data = await res.json();
+}
 
-    const container = document.getElementById("agenda-list");
 
-    container.innerHTML = "";
+// callback JSONP
+function handleData(data) {
 
-    if (!Array.isArray(data)) return;
+  const container = document.getElementById("agenda-list");
 
-    data.forEach(item => {
+  container.innerHTML = "";
 
-      const div = document.createElement("div");
-      div.className = "agenda-item";
+  if (!Array.isArray(data)) return;
 
-      div.innerHTML = `
-        <strong>${item.cliente || ""}</strong>
-        <div class="agenda-meta">
-          📅 ${item.data || ""} • ⏰ ${item.horario || ""}
-        </div>
-        <div class="agenda-meta">
-          💆 ${item.procedimento || ""}
-        </div>
-      `;
+  data.forEach(item => {
 
-      container.appendChild(div);
+    const div = document.createElement("div");
+    div.className = "agenda-item";
 
-    });
+    div.innerHTML = `
+      <strong>${item.cliente || ""}</strong>
+      <div class="agenda-meta">
+        📅 ${item.data || ""} • ⏰ ${item.horario || ""}
+      </div>
+      <div class="agenda-meta">
+        💆 ${item.procedimento || ""}
+      </div>
+    `;
 
-  } catch (err) {
+    container.appendChild(div);
 
-    console.error("Erro GET:", err);
-
-    document.getElementById("agenda-list").innerHTML =
-      "<p>Erro ao carregar agenda.</p>";
-
-  }
+  });
 
 }
 
 
 // ======================
-// SALVAR AGENDAMENTO
+// SALVAR AGENDAMENTO (POST simples)
 // ======================
 document.getElementById("agenda-form").addEventListener("submit", async (e) => {
 
@@ -73,17 +69,7 @@ document.getElementById("agenda-form").addEventListener("submit", async (e) => {
       body: formData
     });
 
-    if (!res.ok) throw new Error("Erro POST");
-
-    const text = await res.text();
-
-    let result;
-
-    try {
-      result = JSON.parse(text);
-    } catch {
-      throw new Error("Resposta inválida da API");
-    }
+    const result = await res.json();
 
     if (result.status === "success") {
 
@@ -101,9 +87,8 @@ document.getElementById("agenda-form").addEventListener("submit", async (e) => {
 
   } catch (err) {
 
-    console.error("Erro POST:", err);
-
-    alert("Erro ao salvar agendamento");
+    alert("Erro de conexão");
+    console.error(err);
 
   }
 

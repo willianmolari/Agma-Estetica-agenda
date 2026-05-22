@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Estética</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        button { width: 100%; padding: 15px; margin-top: 10px; background: #6200ea; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h1>Agenda da Clínica</h1>
+    <div id="agenda">Carregando...</div>
+
+    <script>
+        // SUBSTITUA PELA SUA URL QUE VOCÊ COPIOU NO PASSO 2
+        const API_URL = "SUA_URL_DO_APPS_SCRIPT_AQUI";
+
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                let html = "<ul>";
+                data.forEach(item => {
+                    html += `<li>${item.data} - ${item.horario}: ${item.cliente}</li>`;
+                });
+                document.getElementById('agenda').innerHTML = html + "</ul>";
+            });
+    </script>
+</body>
+</html>

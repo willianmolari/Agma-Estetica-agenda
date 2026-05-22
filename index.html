@@ -1,39 +1,84 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
   <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Agenda Clínica Estética</title>
+
   <link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
+
   <h1>Agenda Clínica Estética</h1>
 
   <section id="form-section">
+
     <h2>Marcar Novo Cliente</h2>
+
     <form id="agenda-form">
-      <label>Data: <input type="date" id="data" required></label>
-      <label>Horário: <input type="time" id="horario" required></label>
-      <label>Cliente: <input type="text" id="cliente" required></label>
-      <label>Procedimento: <input type="text" id="procedimento" required></label>
-      <button type="submit">Agendar</button>
+
+      <label>
+        Data:
+        <input type="date" id="data" required>
+      </label>
+
+      <label>
+        Horário:
+        <input type="time" id="horario" required>
+      </label>
+
+      <label>
+        Cliente:
+        <input type="text" id="cliente" required>
+      </label>
+
+      <label>
+        Procedimento:
+        <input type="text" id="procedimento" required>
+      </label>
+
+      <button type="submit">
+        Agendar
+      </button>
+
     </form>
+
   </section>
 
   <section id="agenda-section">
+
     <h2>Agenda</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Horário</th>
-          <th>Cliente</th>
-          <th>Procedimento</th>
-        </tr>
-      </thead>
-      <tbody id="agenda-list"></tbody>
-    </table>
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Data</th>
+            <th>Horário</th>
+            <th>Cliente</th>
+            <th>Procedimento</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="agenda-list"></tbody>
+
+      </table>
+
+    </div>
+
   </section>
 
   <script src="script.js"></script>
+
 </body>
 </html>

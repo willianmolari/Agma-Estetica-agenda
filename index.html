@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda Estética</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        button { width: 100%; padding: 15px; margin-top: 10px; background: #6200ea; color: white; border: none; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Agenda da Clínica</h1>
-    <div id="agenda">Carregando...</div>
+    <header>
+        <h1>Agenda Estética</h1>
+    </header>
 
-    <script>
-        // SUBSTITUA PELA SUA URL QUE VOCÊ COPIOU NO PASSO 2
-        const API_URL = "SUA_URL_DO_APPS_SCRIPT_AQUI";
+    <main>
+        <section id="form-agendamento">
+            <input type="date" id="data" required>
+            <input type="time" id="horario" required>
+            <input type="text" id="cliente" placeholder="Nome do Cliente" required>
+            <input type="text" id="procedimento" placeholder="Procedimento" required>
+            <button onclick="salvar()">Agendar</button>
+        </section>
 
-        fetch(API_URL)
-            .then(res => res.json())
-            .then(data => {
-                let html = "<ul>";
-                data.forEach(item => {
-                    html += `<li>${item.data} - ${item.horario}: ${item.cliente}</li>`;
-                });
-                document.getElementById('agenda').innerHTML = html + "</ul>";
-            });
-    </script>
+        <section id="lista-agenda">
+            <h2>Próximos Horários</h2>
+            <div id="container-agenda">Carregando...</div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
